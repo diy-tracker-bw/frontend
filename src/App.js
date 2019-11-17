@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import GlobalStyles from './styles/GlobalStyles';
 import PrivateRoute from './components/PrivateRoute';
 import Home from './routes/Home';
-import Login from './components/Login';
+import Login from './routes/Login';
 
 function App() {
   return (
