@@ -49,6 +49,9 @@ const LoginForm = ({ values, errors, touched, status }) => {
           <div className="input-box">
             {/* <label htmlFor="password">Password: </label> */}
             <Field type="password" name="password" id="password" placeholder="Enter your password" />
+            {touched.password && errors.password && (
+              <p>{errors.password}</p>
+            )}
           </div>
           <div>
             <button className="login-button" type="submit">Login</button>
