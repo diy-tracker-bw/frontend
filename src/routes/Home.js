@@ -156,7 +156,7 @@ const Home = () => {
   return (
     <Wrapper>
       <h1>Discover</h1>
-      {/* <button onClick={handleLogout}>Log out</button> */}
+      <button onClick={handleLogout}>Log out</button>
       <GridList>
         {mockData.map(item => (
           <GridItem key={item.id} image={item.image} likes={item.likes}>
