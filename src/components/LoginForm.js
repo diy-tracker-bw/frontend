@@ -11,6 +11,19 @@ const FormPage = styled.div`
   text-align: center;
   color: #7A7878;
   background-color: #EDC7C5;
+  padding: 10px;
+
+  .input-box {
+    border: 1px solid #EDC7C5;
+  }
+
+  .login-button {
+    color: #EDC7C5;
+    background-color: #7A7878;
+    border-radius: 12px;
+    font-weight: bold;
+    padding: 5px;
+  }
 `;
 
 
@@ -26,15 +39,15 @@ const LoginForm = ({ values, errors, touched, status }) => {
       <h1>DIY Tracker Login</h1>
       <div className="form-page">
         <Form>
-          <div className="userName">
-            <label htmlFor="username">Username: </label>
+          <div className="input-box">
+            {/* <label htmlFor="username">Username: </label> */}
             <Field type="text" name="username" id="username" placeholder="Enter your username" />
             {touched.username && errors.username && (
               <p>{errors.username}</p>
             )}
           </div>
-          <div className="password">
-            <label htmlFor="password">Password: </label>
+          <div className="input-box">
+            {/* <label htmlFor="password">Password: </label> */}
             <Field type="password" name="password" id="password" placeholder="Enter your password" />
           </div>
           <div>
@@ -63,6 +76,15 @@ const FormikLoginForm = withFormik({
     username: Yup.string().required("Username Required"),
     password: Yup.string().required("Password Required")
   })
+//   handleSubmit(values, { setStatus }) {
+//     axios
+//         .post("", values)
+//         .then(res => {
+//             console.log(res);
+//             setStatus(res.data)
+//         })
+//         .catch(err => console.log(err.response));
+// }
 })(LoginForm);
 
 export default FormikLoginForm;
