@@ -30,6 +30,8 @@ const FormPage = styled.div`
 const LoginForm = ({ values, errors, touched, status }) => {
   const [userCredentials, setUserCredentials] = useState([]);
 
+  // const { handleLogin } = useAuth();
+
   useEffect(() => {
     status && setUserCredentials(member => [...member, status])
   }, [status])
@@ -78,22 +80,23 @@ const FormikLoginForm = withFormik({
   validationSchema: Yup.object().shape({
     username: Yup.string().required("Username Required"),
     password: Yup.string().required("Password Required")
-  })
-//   handleSubmit(values, { setStatus }) {
-//     axios
-//         .post("", values)
-//         .then(res => {
-//             console.log(res);
-//             setStatus(res.data)
-//         })
-//         .catch(err => console.log(err.response));
-// }
+  }),
+  handleSubmit(values, { setStatus }) {
+    // handleLogin(values)
+    axiosWithAuth()
+        .post("/user/login", values)
+        .then(res => {
+            console.log(res.data);
+            setStatus(res.data)
+        })
+        .catch(err => console.log(err.response));
+}
 })(LoginForm);
 
 export default FormikLoginForm;
 
 
-// DeAndre's login form code below!
+// DeAndre's mock login form code below!
 
 // const LoginForm = () => {
 //   const [userCredentials, setUserCredentials] = useState({
