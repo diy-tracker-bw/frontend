@@ -106,9 +106,16 @@ const AddForm = ({ setProject, open, close }) => {
   const handleAddProject = async e => {
     e.preventDefault();
     try {
-      const res = await axiosWithAuth().post('/projects/project', addProject);
+      const userRes = await axiosWithAuth().get('users/getuserinfo');
+      const userData = await userRes.data;
+      const res = await axiosWithAuth().post('/projects/project', {
+        ...addProject,
+        user: {
+          ...userData,
+        },
+      });
       const data = await res.data;
-      setProject(data);
+      setAddProject(data);
     } catch (error) {
       console.log(error);
     }
