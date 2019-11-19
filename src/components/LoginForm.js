@@ -4,6 +4,28 @@ import axiosWithAuth from '../utils/axiosWithAuth';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import styled from 'styled-components';
+
+
+const FormPage = styled.div`
+  text-align: center;
+  color: #7A7878;
+  background-color: #EDC7C5;
+  padding: 10px;
+
+  .input-box {
+    border: 1px solid #EDC7C5;
+  }
+
+  .login-button {
+    color: #EDC7C5;
+    background-color: #7A7878;
+    border-radius: 12px;
+    font-weight: bold;
+    padding: 5px;
+  }
+`;
+
 
 const LoginForm = ({ values, errors, touched, status }) => {
   const [userCredentials, setUserCredentials] = useState([]);
@@ -13,24 +35,36 @@ const LoginForm = ({ values, errors, touched, status }) => {
   }, [status])
 
   return (
-    <div>
-      <Form>
-        <div>
-          <label htmlFor="username">Username: </label>
-          <Field type="text" name="username" id="username" placeholder="Enter your username" />
-        </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <Field type="password" name="password" id="password" placeholder="Enter your password" />
-        </div>
-      </Form>
-      {userCredentials.map(user => (
-        <div key="user.id">
-          <p>User: {user.username}</p>
-          <p>Password: {user.password}</p>
-        </div>
-      ))}
-    </div>
+    <FormPage>
+      <h1>DIY Tracker Login</h1>
+      <div className="form-page">
+        <Form>
+          <div className="input-box">
+            {/* <label htmlFor="username">Username: </label> */}
+            <Field type="text" name="username" id="username" placeholder="Enter your username" />
+            {touched.username && errors.username && (
+              <p>{errors.username}</p>
+            )}
+          </div>
+          <div className="input-box">
+            {/* <label htmlFor="password">Password: </label> */}
+            <Field type="password" name="password" id="password" placeholder="Enter your password" />
+            {touched.password && errors.password && (
+              <p>{errors.password}</p>
+            )}
+          </div>
+          <div>
+            <button className="login-button" type="submit">Login</button>
+          </div>
+        </Form>
+        {userCredentials.map(user => (
+          <div key="user.id">
+            <p>User: {user.username}</p>
+            <p>Password: {user.password}</p>
+          </div>
+        ))}
+      </div>
+    </FormPage>
   );
 };
 
@@ -42,13 +76,24 @@ const FormikLoginForm = withFormik({
     }
   },
   validationSchema: Yup.object().shape({
-    username: Yup.string().required(),
-    password: Yup.string().required()
+    username: Yup.string().required("Username Required"),
+    password: Yup.string().required("Password Required")
   })
+//   handleSubmit(values, { setStatus }) {
+//     axios
+//         .post("", values)
+//         .then(res => {
+//             console.log(res);
+//             setStatus(res.data)
+//         })
+//         .catch(err => console.log(err.response));
+// }
 })(LoginForm);
 
 export default FormikLoginForm;
 
+
+// DeAndre's login form code below!
 
 // const LoginForm = () => {
 //   const [userCredentials, setUserCredentials] = useState({
