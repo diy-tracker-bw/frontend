@@ -22,7 +22,6 @@ function App() {
         <Switch>
           <Route exact path="/login">
             {localStorage.getItem('token') ? <Redirect to="/" /> : <Login />}
-            <Login />
           </Route>
           <PrivateRoute exact path="/">
             <Home />
