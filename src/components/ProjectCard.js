@@ -93,37 +93,37 @@ const Menu = styled.div`
 const ProjectCard = ({ project }) => {
   const [toggleMenu, setToggleMenu] = useState();
   return (
-    <Link to={`/project/${project.projectId}`}>
-      <GridItem image={project.photoUrl} likes={project.likes}>
-        <UserInfo className="user-info">
-          <div>
-            <img src={project.image} />
-          </div>
-          <h4>{project.user.username}</h4>
-        </UserInfo>
-        <ProjectInfo>
+    <GridItem image={project.photoUrl} likes={project.likes}>
+      <UserInfo className="user-info">
+        <div>
+          <img src={project.image} />
+        </div>
+        <h4>{project.user.username}</h4>
+      </UserInfo>
+      <ProjectInfo>
+        <Link to={`/project/${project.projectId}`}>
           <h2>{project.projectName}</h2>
-          <div className="meta">
-            <div className="left">
-              <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
-              {toggleMenu ? (
-                <Menu>
-                  <ul>
-                    <li>Edit</li>
-                    <li>Delete</li>
-                  </ul>
-                </Menu>
-              ) : null}
-            </div>
-            <div className="right">
-              <Heart />
-              <MessageSquare />
-              <Share2 />
-            </div>
+        </Link>
+        <div className="meta">
+          <div className="left">
+            <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
+            {toggleMenu ? (
+              <Menu>
+                <ul>
+                  <li>Edit</li>
+                  <li>Delete</li>
+                </ul>
+              </Menu>
+            ) : null}
           </div>
-        </ProjectInfo>
-      </GridItem>
-    </Link>
+          <div className="right">
+            <Heart />
+            <MessageSquare />
+            <Share2 />
+          </div>
+        </div>
+      </ProjectInfo>
+    </GridItem>
   );
 };
 
