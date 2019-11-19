@@ -96,7 +96,7 @@ const CardButton = styled.button`
 
 const AddForm = ({ setProject, open, close }) => {
   const initialProject = {
-    projectName: '',
+    projectname: '',
     instructions: '',
     photoUrl: '',
   };
@@ -131,15 +131,10 @@ const AddForm = ({ setProject, open, close }) => {
             <CardField>
               <CardInput
                 type="text"
-                name="projectName"
+                name="projectname"
                 placeholder="Project Name"
-                value={addProject.projectName}
-                onChange={e =>
-                  setAddProject({
-                    ...addProject,
-                    [e.target.name]: e.target.value,
-                  })
-                }
+                value={addProject.projectname}
+                onChange={handleChange}
               />
             </CardField>
             <CardField>
@@ -148,12 +143,7 @@ const AddForm = ({ setProject, open, close }) => {
                 name="instructions"
                 placeholder="Instructions"
                 value={addProject.instructions}
-                onChange={e =>
-                  setAddProject({
-                    ...setAddProject,
-                    instructions: e.target.value,
-                  })
-                }
+                onChange={handleChange}
               />
             </CardField>
             <CardField>
@@ -162,9 +152,7 @@ const AddForm = ({ setProject, open, close }) => {
                 name="photoUrl"
                 placeholder="Photo url"
                 value={addProject.photoUrl}
-                onChange={e =>
-                  setAddProject({ ...setAddProject, photoUrl: e.target.value })
-                }
+                onChange={handleChange}
               />
             </CardField>
             <CardButton type="submit">Add Project</CardButton>
