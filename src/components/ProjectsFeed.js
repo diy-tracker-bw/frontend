@@ -17,7 +17,7 @@ const ProjectsFeed = ({ projects }) => {
   return (
     <GridList>
       {projects.map(project => (
-        <ProjectCard project={project} key={project.projetId} />
+        <ProjectCard project={project} key={project.projectId} />
       ))}
     </GridList>
   );
