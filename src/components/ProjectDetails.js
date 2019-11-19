@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 const Wrapper = styled.div`
@@ -50,24 +50,24 @@ const ProjectInfo = styled.div`
   }
 `;
 
-const ProjectDetails = ({ project, open, close }) =>
-  open
-    ? ReactDOM.createPortal(
-        <>
-          <Wrapper>
-            <span onClick={close}>X</span>
-            <Details>
-              <ImgWrapper>
-                <img src={project.photoUrl} />
-              </ImgWrapper>
-              <ProjectInfo>
-                <h2>{project.projectName}</h2>
-              </ProjectInfo>
-            </Details>
-          </Wrapper>
-        </>,
-        document.body,
-      )
-    : null;
+const ProjectDetails = ({ project }) => {
+  const history = useHistory();
+  return (
+    <>
+      <Wrapper>
+        <span onClick={() => history.goBack()}>Back</span>
+        <Details>
+          <ImgWrapper>
+            <img src={project.photoUrl} />
+          </ImgWrapper>
+          <ProjectInfo>
+            <h2>{project.projectName}</h2>
+            <p>{project.instructions}</p>
+          </ProjectInfo>
+        </Details>
+      </Wrapper>
+    </>
+  );
+};
 
 export default ProjectDetails;

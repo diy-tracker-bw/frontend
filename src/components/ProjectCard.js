@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/macro';
+import { Link } from 'react-router-dom';
 import { Heart, Share2, MessageSquare, MoreHorizontal } from 'react-feather';
 
 const GridItem = styled.div`
@@ -92,35 +93,37 @@ const Menu = styled.div`
 const ProjectCard = ({ project }) => {
   const [toggleMenu, setToggleMenu] = useState();
   return (
-    <GridItem image={project.photoUrl} likes={project.likes}>
-      <UserInfo className="user-info">
-        <div>
-          <img src={project.image} />
-        </div>
-        <h4>{project.user.username}</h4>
-      </UserInfo>
-      <ProjectInfo>
-        <h2>{project.projectName}</h2>
-        <div className="meta">
-          <div className="left">
-            <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
-            {toggleMenu ? (
-              <Menu>
-                <ul>
-                  <li>Edit</li>
-                  <li>Delete</li>
-                </ul>
-              </Menu>
-            ) : null}
+    <Link to={`/project/${project.projectId}`}>
+      <GridItem image={project.photoUrl} likes={project.likes}>
+        <UserInfo className="user-info">
+          <div>
+            <img src={project.image} />
           </div>
-          <div className="right">
-            <Heart />
-            <MessageSquare />
-            <Share2 />
+          <h4>{project.user.username}</h4>
+        </UserInfo>
+        <ProjectInfo>
+          <h2>{project.projectName}</h2>
+          <div className="meta">
+            <div className="left">
+              <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
+              {toggleMenu ? (
+                <Menu>
+                  <ul>
+                    <li>Edit</li>
+                    <li>Delete</li>
+                  </ul>
+                </Menu>
+              ) : null}
+            </div>
+            <div className="right">
+              <Heart />
+              <MessageSquare />
+              <Share2 />
+            </div>
           </div>
-        </div>
-      </ProjectInfo>
-    </GridItem>
+        </ProjectInfo>
+      </GridItem>
+    </Link>
   );
 };
 
