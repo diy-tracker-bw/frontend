@@ -6,6 +6,25 @@ import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 
+const RegistrationPage = styled.div`
+  text-align: center;
+  color: #7A7878;
+  background-color: #EDC7C5;
+  padding: 10px;
+
+  .input-box {
+    border: 1px solid #EDC7C5;
+  }
+
+  .signup-button {
+    color: #EDC7C5;
+    background-color: #7A7878;
+    border-radius: 12px;
+    font-weight: bold;
+    padding: 5px;
+  }
+`;
+
 const RegisterForm = ({ values, errors, touched, status }) => {
     const [userSignUp, setUserSignUp] = useState([])
 

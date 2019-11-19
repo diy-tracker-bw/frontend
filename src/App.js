@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Project from './routes/Project';
+import Register from './routes/Register';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -20,6 +21,9 @@ function App() {
       <GlobalStyles />
       <Wrapper>
         <Switch>
+        <Route exact path="/register">
+            {localStorage.getItem('token') ? <Redirect to="/" /> : <Register />}
+          </Route>
           <Route exact path="/login">
             {localStorage.getItem('token') ? <Redirect to="/" /> : <Login />}
           </Route>
