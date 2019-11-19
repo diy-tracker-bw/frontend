@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-import axios from 'axios';
 import axiosWithAuth from '../utils/axiosWithAuth';
 
 const AuthContext = React.createContext();
@@ -7,7 +6,10 @@ const AuthContext = React.createContext();
 export const reducer = (state, action) => {
   switch (action.type) {
     case 'REGISTER_SUCCESS':
-      localStorage.setItem('token', JSON.stringify(action.payload.token));
+      localStorage.setItem(
+        'token',
+        JSON.stringify(action.payload.access_token),
+      );
       state.registered = true;
       state.isAuthenticated = state.registered;
       return {
@@ -15,7 +17,10 @@ export const reducer = (state, action) => {
         ...action.payload,
       };
     case 'LOGIN_SUCCESS':
-      localStorage.setItem('token', JSON.stringify(action.payload.token));
+      localStorage.setItem(
+        'token',
+        JSON.stringify(action.payload.access_token),
+      );
       state.isAuthenticated = true;
       return {
         ...state,
@@ -46,11 +51,9 @@ const AuthProvider = ({ children }) => {
 
   const handleLogin = async values => {
     try {
-      // Mocking API post request
-      const response = await axios.post('https://reqres.in/api/login', values);
-      // const response = await axiosWithAuth().post('api/users/login', values);
+      const response = await axiosWithAuth().post('/user/login', values);
 
-      console.log(response.data);
+      console.log('login', response.data);
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: response.data,
@@ -66,15 +69,10 @@ const AuthProvider = ({ children }) => {
 
   const handleRegister = async values => {
     try {
-      // Mocking API post request
-      const response = await axios.post('https://reqres.in/api/register', {
-        email: values.email,
+      const response = await axiosWithAuth().post('/createnewuser', {
+        username: values.username,
         password: values.password,
       });
-      // const response = await axiosWithAuth().post('api/users/register', {
-      //   email: values.email,
-      //   password: values.password,
-      // });
       console.log(response.data);
       dispatch({
         type: 'REGISTER_SUCCESS',
