@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import { Heart, Share2, MessageSquare, MoreHorizontal } from 'react-feather';
 
@@ -18,7 +18,7 @@ const GridItem = styled.div`
   padding: 1rem;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.05), 0 0px 40px rgba(0, 0, 0, 0.08);
   border-radius: 15px;
-  overflow: hidden;
+  /* overflow: hidden; */
   @media (min-width: 768px) {
     /* grid-column-end: ${props =>
       props.likes >= 100 ? 'span 2' : 'inherit'}; */
@@ -53,6 +53,11 @@ const ProjectInfo = styled.div`
     padding: 1rem;
   }
 
+  div.left {
+    position: relative;
+  }
+
+  div.left,
   div.right {
     width: 100px;
     display: flex;
@@ -61,7 +66,31 @@ const ProjectInfo = styled.div`
   }
 `;
 
+const Menu = styled.div`
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+
+  ul {
+    padding: 0;
+
+    li {
+      color: #111;
+      padding: 0.5rem 0;
+      list-style: none;
+      border-top: 1px solid #cacaca;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
+  }
+`;
+
 const ProjectCard = ({ project }) => {
+  const [toggleMenu, setToggleMenu] = useState();
   return (
     <GridItem image={project.photoUrl} likes={project.likes}>
       <UserInfo className="user-info">
@@ -74,7 +103,15 @@ const ProjectCard = ({ project }) => {
         <h2>{project.projectName}</h2>
         <div className="meta">
           <div className="left">
-            <MoreHorizontal />
+            <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
+            {toggleMenu ? (
+              <Menu>
+                <ul>
+                  <li>Edit</li>
+                  <li>Delete</li>
+                </ul>
+              </Menu>
+            ) : null}
           </div>
           <div className="right">
             <Heart />

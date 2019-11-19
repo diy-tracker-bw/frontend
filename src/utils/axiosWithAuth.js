@@ -4,9 +4,9 @@ const axiosWithAuth = () => {
   let token = localStorage.getItem('token');
   return axios.create({
     baseURL: 'https://patrick-diy.herokuapp.com',
-    headers: {
+    tokenheaders: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${JSON.parse(token)}`, // 9d8a1097-5d0f-4960-87e3-88c251582f1d,
+      Authorization: `Bearer ${token}`, // 9d8a1097-5d0f-4960-87e3-88c251582f1d,
     },
   });
 };
