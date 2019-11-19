@@ -125,7 +125,7 @@ const AddForm = ({ setProject, open, close }) => {
     ? ReactDOM.createPortal(
         <CardWrapper>
           <span onClick={close}>
-            <X />
+            <X size="48" />
           </span>
           <form onSubmit={handleAddProject}>
             <CardField>
