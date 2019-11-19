@@ -1,9 +1,9 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAuth';
+// import { useAuth } from '../hooks/useAuth';
 import RegisterForm from '../components/RegisterForm';
 
 const Register = () => {
-    const { handleLogin } = useAuth();
+    // const { handleLogin } = useAuth();
     return (
         <div>
             <RegisterForm />

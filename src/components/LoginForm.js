@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
@@ -27,14 +26,9 @@ const FormPage = styled.div`
 `;
 
 
-const LoginForm = ({ values, errors, touched, status }) => {
-  const [userCredentials, setUserCredentials] = useState([]);
-
+const LoginForm = ({ values, errors, touched }) => {
+  
   // const { handleLogin } = useAuth();
-
-  useEffect(() => {
-    status && setUserCredentials(member => [...member, status])
-  }, [status])
 
   return (
     <FormPage>
@@ -42,14 +36,12 @@ const LoginForm = ({ values, errors, touched, status }) => {
       <div className="form-page">
         <Form>
           <div className="input-box">
-            {/* <label htmlFor="username">Username: </label> */}
             <Field type="text" name="username" id="username" placeholder="Enter your username" />
             {touched.username && errors.username && (
               <p>{errors.username}</p>
             )}
           </div>
           <div className="input-box">
-            {/* <label htmlFor="password">Password: </label> */}
             <Field type="password" name="password" id="password" placeholder="Enter your password" />
             {touched.password && errors.password && (
               <p>{errors.password}</p>
@@ -59,12 +51,6 @@ const LoginForm = ({ values, errors, touched, status }) => {
             <button className="login-button" type="submit">Login</button>
           </div>
         </Form>
-        {userCredentials.map(user => (
-          <div key="user.id">
-            <p>User: {user.username}</p>
-            <p>Password: {user.password}</p>
-          </div>
-        ))}
       </div>
     </FormPage>
   );

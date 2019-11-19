@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
@@ -25,15 +24,10 @@ const RegistrationPage = styled.div`
   }
 `;
 
-const RegisterForm = ({ values, errors, touched, status }) => {
-    const [userSignUp, setUserSignUp] = useState([])
+const RegisterForm = ({ values, errors, touched }) => {
 
     // const { handleLogin } = useAuth();
 
-    useEffect(() => {
-        status && setUserSignUp(member => [...member, status])
-    }, [status])
-    
     return (
         <RegistrationPage>
             <h1>DIY Tracker Sign Up</h1>
@@ -41,24 +35,26 @@ const RegisterForm = ({ values, errors, touched, status }) => {
                 <Form>
                     <div className="input-box">
                         <Field type="text" name="username" id="username" placeholder="Enter your username" />
+                        {touched.username && errors.username && (
+                            <p>{errors.username}</p>
+                        )}
                     </div>
                     <div className="input-box">
                         <Field type="email" name="email" id="email" placeholder="Enter your email" />
+                        {touched.email && errors.email && (
+                            <p>{errors.email}</p>
+                        )}
                     </div>
                     <div className="input-box">
                         <Field type="password" name="password" id="password" placeholder="Enter your password" />
+                        {touched.password && errors.password && (
+                            <p>{errors.password}</p>
+                        )}
                     </div>
                     <div>
                         <button className="signup-button" type="submit">Sign Up</button>
                     </div>
                 </Form>
-                {userSignUp.map(user => (
-                    <div key="user.id">
-                        <p>Username: {user.username}</p>
-                        <p>Email: {user.email}</p>
-                        <p>Password: {user.password}</p>
-                    </div>
-                ))}
             </div>        
         </RegistrationPage> 
     )   
@@ -73,9 +69,9 @@ const FormikRegisterForm = withFormik({
         }
     },
     validationSchema: Yup.object().shape({
-        username: Yup.string().required(),
-        email: Yup.string().required(),
-        password: Yup.string().required()
+        username: Yup.string().required("Username Required"),
+        email: Yup.string().required("Email Required"),
+        password: Yup.string().required("Password Required")
     })
     // handleSubmit(values, { setStatus }) {
     //     // handleLogin(values)
