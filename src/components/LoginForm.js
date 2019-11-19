@@ -89,7 +89,7 @@ const FormikLoginForm = withFormik({
             console.log(res.data);
             setStatus(res.data)
         })
-        .catch(err => console.log(err.response));
+        .catch(err => console.log(err.res));
 }
 })(LoginForm);
 
