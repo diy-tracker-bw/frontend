@@ -72,6 +72,25 @@ const GlobalStyles = createGlobalStyle`
   [type='submit'] {
     -webkit-appearance: button;
   }
+
+  .show-add-form-enter {
+    opacity: 0;
+    transform: scale(0);
+  }
+  .show-add-form-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 450ms, transform 300ms;
+  }
+  .show-add-form-exit {
+    opacity: 0;
+    transform: scale(0);
+  }
+  .show-add-form-exit-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 450ms, transform 300ms;
+  }
 `;
 
 export default GlobalStyles;

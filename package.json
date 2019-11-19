@@ -11,6 +11,7 @@
     "react-feather": "^2.0.3",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-transition-group": "^4.3.0",
     "styled-components": "^5.0.0-rc.2",
     "yup": "^0.27.0"
   },
@@ -34,5 +35,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "babelMacros": {
+    "styledComponents": {
+      "pure": true
+    }
   }
 }
