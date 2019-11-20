@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 import { Heart, Share2, MessageSquare, MoreHorizontal } from 'react-feather';
@@ -94,9 +94,14 @@ const Menu = styled.div`
   }
 `;
 
-const ProjectCard = ({ project, projects, setProjects }) => {
+const ProjectCard = ({
+  project,
+  projects,
+  setProjects,
+  showEditForm,
+  setShowEditForm,
+}) => {
   const [toggleMenu, setToggleMenu] = useState();
-  const [showEditForm, setShowEditForm] = useState(false);
 
   const toggleEditForm = () => setShowEditForm(!showEditForm);
 
@@ -111,9 +116,15 @@ const ProjectCard = ({ project, projects, setProjects }) => {
         project => project.projectId !== data,
       );
       setProjects(newProjects);
+      setToggleMenu(!toggleMenu);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const editProject = () => {
+    setShowEditForm(!showEditForm);
+    setToggleMenu(!toggleMenu);
   };
 
   return (
@@ -125,7 +136,11 @@ const ProjectCard = ({ project, projects, setProjects }) => {
           project={project}
         />
       </CSSTransition>
-      <GridItem image={project.photoUrl} likes={project.likes}>
+      <GridItem
+        image={project.photoUrl}
+        likes={project.likes}
+        onClick={() => (toggleMenu ? setToggleMenu(false) : null)}
+      >
         <UserInfo className="user-info">
           <div>
             <img src={project.image} />
@@ -142,7 +157,7 @@ const ProjectCard = ({ project, projects, setProjects }) => {
               {toggleMenu ? (
                 <Menu>
                   <ul>
-                    <li onClick={() => setShowEditForm(!showEditForm)}>Edit</li>
+                    <li onClick={editProject}>Edit</li>
                     <li onClick={deleteProject}>Delete</li>
                   </ul>
                 </Menu>
