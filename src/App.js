@@ -4,6 +4,7 @@ import styled from 'styled-components/macro';
 
 import GlobalStyles from './styles/GlobalStyles';
 import PrivateRoute from './components/PrivateRoute';
+import Header from './components/Header';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Project from './routes/Project';
@@ -20,8 +21,9 @@ function App() {
     <>
       <GlobalStyles />
       <Wrapper>
+        <Header />
         <Switch>
-        <Route exact path="/register">
+          <Route exact path="/register">
             {localStorage.getItem('token') ? <Redirect to="/" /> : <Register />}
           </Route>
           <Route exact path="/login">
