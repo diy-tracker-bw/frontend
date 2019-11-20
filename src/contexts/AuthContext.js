@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import axios from 'axios';
 import axiosWithAuth from '../utils/axiosWithAuth';
 
 const AuthContext = React.createContext();
@@ -51,7 +52,10 @@ const AuthProvider = ({ children }) => {
 
   const handleLogin = async values => {
     try {
-      const response = await axiosWithAuth().post('/user/login', values);
+      const response = await axios.post(
+        'https://patrick-diy.herokuapp.com/user/login',
+        values,
+      );
 
       console.log('login', response.data);
       dispatch({
@@ -69,10 +73,13 @@ const AuthProvider = ({ children }) => {
 
   const handleRegister = async values => {
     try {
-      const response = await axiosWithAuth().post('/createnewuser', {
-        username: values.username,
-        password: values.password,
-      });
+      const response = await axios.post(
+        'https://patrick-diy.herokuapp.com/createnewuser',
+        {
+          username: values.username,
+          password: values.password,
+        },
+      );
       console.log(response.data);
       dispatch({
         type: 'REGISTER_SUCCESS',
