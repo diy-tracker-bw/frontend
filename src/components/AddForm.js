@@ -94,7 +94,7 @@ const CardButton = styled.button`
   }
 `;
 
-const AddForm = ({ open, close }) => {
+const AddForm = ({ projects, setProjects, open, close }) => {
   const [project, setProject] = useState({
     projectname: '',
     instructions: '',
@@ -122,6 +122,7 @@ const AddForm = ({ open, close }) => {
         instructions: '',
         photoUrl: '',
       });
+      close();
     } catch (error) {
       console.log(error);
     }
