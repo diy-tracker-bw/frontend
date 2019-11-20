@@ -1,5 +1,5 @@
 import React from 'react';
-import axiosWithAuth from '../utils/axiosWithAuth';
+import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -26,7 +26,7 @@ const FormPage = styled.div`
 `;
 
 
-const LoginForm = ({ values, errors, touched }) => {
+const LoginForm = ({ errors, touched }) => {
   
   // const { handleLogin } = useAuth();
 
@@ -67,13 +67,15 @@ const FormikLoginForm = withFormik({
     username: Yup.string().required("Username Required"),
     password: Yup.string().required("Password Required")
   }),
-  handleSubmit(values, { setStatus }) {
-    // handleLogin(values)
-    axiosWithAuth()
-        .post("/user/login", values)
+  handleSubmit(values, props) {
+    // props.handleLogin(values)
+    axios
+        .post("https://patrick-diy.herokuapp.com/user/login", values)
         .then(res => {
             console.log(res.data);
-            setStatus(res.data)
+            const token = JSON.stringify(res.data.access_token)
+            localStorage.getItem('token', token)
+            props.history.push('/')
         })
         .catch(err => console.log(err.res));
 }
