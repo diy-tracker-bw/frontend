@@ -1,4 +1,5 @@
 import React from 'react';
+import Markdown from 'markdown-to-jsx';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
@@ -62,7 +63,11 @@ const ProjectDetails = ({ project }) => {
           </ImgWrapper>
           <ProjectInfo>
             <h2>{project.projectname}</h2>
-            <p>{project.instructions}</p>
+            <div className="instructions">
+              {project.instructions && (
+                <Markdown>{project.instructions}</Markdown>
+              )}
+            </div>
           </ProjectInfo>
         </Details>
       </Wrapper>
