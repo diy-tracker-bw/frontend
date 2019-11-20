@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Share2, MessageSquare, MoreHorizontal } from 'react-feather';
 import { CSSTransition } from 'react-transition-group';
 
+import axiosWithAuth from '../utils/axiosWithAuth';
 import UpdateForm from './UpdateForm';
 
 const GridItem = styled.div`
@@ -93,11 +94,27 @@ const Menu = styled.div`
   }
 `;
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, projects, setProjects }) => {
   const [toggleMenu, setToggleMenu] = useState();
   const [showEditForm, setShowEditForm] = useState(false);
 
   const toggleEditForm = () => setShowEditForm(!showEditForm);
+
+  const deleteProject = async () => {
+    try {
+      const res = await axiosWithAuth().delete(
+        `/projects/project/${project.projectId}`,
+        project,
+      );
+      const data = await res.data;
+      const newProjects = projects.filter(
+        project => project.projectId !== data,
+      );
+      setProjects(newProjects);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -126,7 +143,7 @@ const ProjectCard = ({ project }) => {
                 <Menu>
                   <ul>
                     <li onClick={() => setShowEditForm(!showEditForm)}>Edit</li>
-                    <li>Delete</li>
+                    <li onClick={deleteProject}>Delete</li>
                   </ul>
                 </Menu>
               ) : null}
