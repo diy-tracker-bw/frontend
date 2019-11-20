@@ -112,8 +112,7 @@ const UpdateForm = ({ project, open, close }) => {
         console.log(error);
       }
     })();
-    console.log(project.projectId)
-  }, [project]);
+  }, [project.projectId]);
 
   const handleChange = e => {
     setCurrentProject({
