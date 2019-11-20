@@ -34,7 +34,7 @@ const ImgWrapper = styled.div`
 
 const Details = styled.div`
   display: grid;
-  grid-template-columns: 25% 1fr;
+  grid-template-columns: 40% 1fr;
   grid-gap: 1rem;
   align-items: center;
   justify-content: center;
