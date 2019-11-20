@@ -38,13 +38,13 @@ const Button = styled.button`
 `;
 
 const Header = () => {
-  const { handleLogout } = useAuth();
+  const { isAuthenticated, handleLogout } = useAuth();
   return (
     <Wrapper>
       <Logo>
         <img src={logo} />
       </Logo>
-      <Button onClick={handleLogout}>Log out</Button>
+      {isAuthenticated && <Button onClick={handleLogout}>Log out</Button>}
     </Wrapper>
   );
 };
