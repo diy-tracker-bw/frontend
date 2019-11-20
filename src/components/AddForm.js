@@ -94,53 +94,52 @@ const CardButton = styled.button`
   }
 `;
 
-const AddForm = ({ setProject, open, close }) => {
-  const initialProject = {
+const AddForm = ({ open, close }) => {
+  const [project, setProject] = useState({
     projectname: '',
     instructions: '',
     photoUrl: '',
+  });
+
+  const handleChange = e => {
+    setProject({
+      ...project,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const [addProject, setAddProject] = useState(initialProject);
-
-  const handleAddProject = async e => {
+  const onSubmit = async e => {
     e.preventDefault();
     try {
       const userRes = await axiosWithAuth().get('users/getuserinfo');
-      const userData = await userRes.data;
-      const res = await axiosWithAuth().post('/projects/project', {
-        ...addProject,
-        user: {
-          ...userData,
-        },
+      await axiosWithAuth().post('/projects/project', {
+        ...project,
+        user: { ...userRes.data },
       });
-      const data = await res.data;
-      setAddProject(data);
+      setProject({
+        ...project,
+        projectname: '',
+        instructions: '',
+        photoUrl: '',
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleChange = e => {
-    e.preventDefault();
-    setAddProject({
-      ...addProject,
-      [e.target.name]: e.target.value,
-    });
-  };
   return open
     ? ReactDOM.createPortal(
         <CardWrapper>
           <span onClick={close}>
             <X size="48" />
           </span>
-          <form onSubmit={handleAddProject}>
+          <form onSubmit={onSubmit}>
             <CardField>
               <CardInput
                 type="text"
                 name="projectname"
+                value={project.projectname}
                 placeholder="Project Name"
-                value={addProject.projectname}
                 onChange={handleChange}
               />
             </CardField>
@@ -148,8 +147,8 @@ const AddForm = ({ setProject, open, close }) => {
               <CardInput
                 type="text"
                 name="instructions"
+                value={project.instructions}
                 placeholder="Instructions"
-                value={addProject.instructions}
                 onChange={handleChange}
               />
             </CardField>
@@ -157,8 +156,8 @@ const AddForm = ({ setProject, open, close }) => {
               <CardInput
                 type="text"
                 name="photoUrl"
-                placeholder="Photo url"
-                value={addProject.photoUrl}
+                value={project.photoUrl}
+                placeholder="Photo"
                 onChange={handleChange}
               />
             </CardField>
