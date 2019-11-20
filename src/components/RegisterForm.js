@@ -1,5 +1,5 @@
 import React from 'react';
-import axiosWithAuth from '../utils/axiosWithAuth';
+import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -24,7 +24,7 @@ const RegistrationPage = styled.div`
   }
 `;
 
-const RegisterForm = ({ values, errors, touched }) => {
+const RegisterForm = ({ errors, touched }) => {
 
     // const { handleLogin } = useAuth();
 
@@ -72,17 +72,16 @@ const FormikRegisterForm = withFormik({
         username: Yup.string().required("Username Required"),
         email: Yup.string().required("Email Required"),
         password: Yup.string().required("Password Required")
-    })
-    // handleSubmit(values, { setStatus }) {
-    //     // handleLogin(values)
-    //     axiosWithAuth()
-    //         .post("", values)
-    //         .then(res => {
-    //             console.log(res.data);
-    //             setStatus(res.data)
-    //         })
-    //         .catch(err => console.log(err.res));
-    // }
+    }),
+    handleSubmit(values, props) {
+        // handleLogin(values)
+        axios
+            .post("", values)
+            .then(res => {
+                
+            })
+            .catch(err => console.log(err.res));
+    }
 })(RegisterForm)
 
 export default FormikRegisterForm

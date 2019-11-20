@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useHistory } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
@@ -75,7 +75,7 @@ const FormikLoginForm = withFormik({
             console.log(res.data);
             const token = JSON.stringify(res.data.access_token)
             localStorage.getItem('token', token)
-            props.history.push('/')
+            useHistory.push('/')
         })
         .catch(err => console.log(err.res));
 }
