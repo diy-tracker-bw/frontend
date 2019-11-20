@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 import { Heart, Share2, MessageSquare, MoreHorizontal } from 'react-feather';
+import { CSSTransition } from 'react-transition-group';
+
+import UpdateForm from './UpdateForm';
 
 const GridItem = styled.div`
   display: flex;
@@ -92,38 +95,51 @@ const Menu = styled.div`
 
 const ProjectCard = ({ project }) => {
   const [toggleMenu, setToggleMenu] = useState();
+  const [showEditForm, setShowEditForm] = useState(false);
+
+  const toggleEditForm = () => setShowEditForm(!showEditForm);
+
   return (
-    <GridItem image={project.photoUrl} likes={project.likes}>
-      <UserInfo className="user-info">
-        <div>
-          <img src={project.image} />
-        </div>
-        <h4>{project.user.username}</h4>
-      </UserInfo>
-      <ProjectInfo>
-        <Link to={`/project/${project.projectId}`}>
-          <h2>{project.projectName}</h2>
-        </Link>
-        <div className="meta">
-          <div className="left">
-            <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
-            {toggleMenu ? (
-              <Menu>
-                <ul>
-                  <li>Edit</li>
-                  <li>Delete</li>
-                </ul>
-              </Menu>
-            ) : null}
+    <>
+      <CSSTransition in={showEditForm} timeout={300} classNames="show-add-form">
+        <UpdateForm
+          open={showEditForm}
+          close={toggleEditForm}
+          project={project}
+        />
+      </CSSTransition>
+      <GridItem image={project.photoUrl} likes={project.likes}>
+        <UserInfo className="user-info">
+          <div>
+            <img src={project.image} />
           </div>
-          <div className="right">
-            <Heart />
-            <MessageSquare />
-            <Share2 />
+          <h4>{project.user && project.user.username}</h4>
+        </UserInfo>
+        <ProjectInfo>
+          <Link to={`/project/${project.projectId}`}>
+            <h2>{project.projectname}</h2>
+          </Link>
+          <div className="meta">
+            <div className="left">
+              <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
+              {toggleMenu ? (
+                <Menu>
+                  <ul>
+                    <li onClick={() => setShowEditForm(!showEditForm)}>Edit</li>
+                    <li>Delete</li>
+                  </ul>
+                </Menu>
+              ) : null}
+            </div>
+            <div className="right">
+              <Heart />
+              <MessageSquare />
+              <Share2 />
+            </div>
           </div>
-        </div>
-      </ProjectInfo>
-    </GridItem>
+        </ProjectInfo>
+      </GridItem>
+    </>
   );
 };
 

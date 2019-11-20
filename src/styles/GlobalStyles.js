@@ -73,20 +73,20 @@ const GlobalStyles = createGlobalStyle`
     -webkit-appearance: button;
   }
 
-  .show-add-form-enter {
+  .show-form-enter {
     opacity: 0;
     transform: scale(0);
   }
-  .show-add-form-enter-active {
+  .show-form-enter-active {
     opacity: 1;
     transform: scale(1);
     transition: opacity 450ms, transform 300ms;
   }
-  .show-add-form-exit {
+  .show-form-exit {
     opacity: 0;
     transform: scale(0);
   }
-  .show-add-form-exit-active {
+  .show-form-exit-active {
     opacity: 1;
     transform: scale(1);
     transition: opacity 450ms, transform 300ms;

@@ -13,11 +13,16 @@ const GridList = styled.div`
   }
 `;
 
-const ProjectsFeed = ({ projects }) => {
+const ProjectsFeed = ({ projects, setProjects }) => {
   return (
     <GridList>
       {projects.map(project => (
-        <ProjectCard project={project} key={project.projectId} />
+        <ProjectCard
+          setProjects={setProjects}
+          projects={projects}
+          project={project}
+          key={project.projectId}
+        />
       ))}
     </GridList>
   );

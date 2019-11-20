@@ -51,7 +51,7 @@ const Home = () => {
       <h1>Discover</h1>
       <button onClick={handleLogout}>Log out</button>
 
-      <CSSTransition in={showAddForm} timeout={300} classNames="show-add-form">
+      <CSSTransition in={showAddForm} timeout={300} classNames="show-form">
         <AddForm open={showAddForm} close={toggleAddForm} />
       </CSSTransition>
       <UserSection>
@@ -61,7 +61,7 @@ const Home = () => {
           </div>
         </UserToolItem>
       </UserSection>
-      <ProjectsFeed projects={projects} />
+      <ProjectsFeed projects={projects} setProjects={setProjects} />
     </Wrapper>
   );
 };

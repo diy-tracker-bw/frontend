@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components/macro';
 import { X } from 'react-feather';
@@ -94,16 +94,30 @@ const CardButton = styled.button`
   }
 `;
 
-const AddForm = ({ open, close }) => {
-  const [project, setProject] = useState({
+const UpdateForm = ({ project, open, close }) => {
+  const [currentProject, setCurrentProject] = useState({
     projectname: '',
     instructions: '',
     photoUrl: '',
   });
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axiosWithAuth().get(
+          `/projects/project/${project.projectId}`,
+        );
+        setCurrentProject(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+    console.log(project.projectId)
+  }, [project]);
+
   const handleChange = e => {
-    setProject({
-      ...project,
+    setCurrentProject({
+      ...currentProject,
       [e.target.name]: e.target.value,
     });
   };
@@ -112,11 +126,15 @@ const AddForm = ({ open, close }) => {
     e.preventDefault();
     try {
       const userRes = await axiosWithAuth().get('users/getuserinfo');
-      await axiosWithAuth().post('/projects/project', {
-        ...project,
-        user: { ...userRes.data },
-      });
-      setProject({
+      const res = await axiosWithAuth().put(
+        `/projects/project/${project.projectId}`,
+        {
+          ...currentProject,
+          user: { ...userRes.data },
+        },
+      );
+      console.log(res.data);
+      setCurrentProject({
         ...project,
         projectname: '',
         instructions: '',
@@ -126,7 +144,6 @@ const AddForm = ({ open, close }) => {
       console.log(error);
     }
   };
-
   return open
     ? ReactDOM.createPortal(
         <CardWrapper>
@@ -138,8 +155,8 @@ const AddForm = ({ open, close }) => {
               <CardInput
                 type="text"
                 name="projectname"
-                value={project.projectname}
                 placeholder="Project Name"
+                value={currentProject.projectname}
                 onChange={handleChange}
               />
             </CardField>
@@ -147,8 +164,8 @@ const AddForm = ({ open, close }) => {
               <CardInput
                 type="text"
                 name="instructions"
-                value={project.instructions}
                 placeholder="Instructions"
+                value={currentProject.instructions}
                 onChange={handleChange}
               />
             </CardField>
@@ -156,12 +173,13 @@ const AddForm = ({ open, close }) => {
               <CardInput
                 type="text"
                 name="photoUrl"
-                value={project.photoUrl}
-                placeholder="Photo"
+                placeholder="Photo url"
+                value={currentProject.photoUrl}
                 onChange={handleChange}
               />
             </CardField>
-            <CardButton type="submit">Add Project</CardButton>
+            <CardButton type="submit">Save Project</CardButton>
+            <CardButton onClick={close}>Cancel</CardButton>
           </form>
         </CardWrapper>,
         document.body,
@@ -169,4 +187,4 @@ const AddForm = ({ open, close }) => {
     : null;
 };
 
-export default AddForm;
+export default UpdateForm;

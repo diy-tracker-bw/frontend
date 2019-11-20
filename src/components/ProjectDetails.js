@@ -61,7 +61,7 @@ const ProjectDetails = ({ project }) => {
             <img src={project.photoUrl} />
           </ImgWrapper>
           <ProjectInfo>
-            <h2>{project.projectName}</h2>
+            <h2>{project.projectname}</h2>
             <p>{project.instructions}</p>
           </ProjectInfo>
         </Details>
