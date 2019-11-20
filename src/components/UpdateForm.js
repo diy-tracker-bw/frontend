@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components/macro';
 import { X } from 'react-feather';
+import SimpleMDE from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
 
@@ -14,7 +16,7 @@ const CardWrapper = styled.div`
   color: #111;
   background: white;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding: 2rem;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.05), 0 0px 40px rgba(0, 0, 0, 0.08);
   border-radius: 5px;
@@ -22,7 +24,7 @@ const CardWrapper = styled.div`
   > * {
     width: 100%;
   }
-  span {
+  span.close {
     display: flex;
     justify-content: flex-end;
     width: 100%;
@@ -31,6 +33,9 @@ const CardWrapper = styled.div`
     &:hover {
       cursor: pointer;
     }
+  }
+  label {
+    color: #7b7b7b;
   }
 `;
 
@@ -121,6 +126,13 @@ const UpdateForm = ({ project, open, close }) => {
     });
   };
 
+  const handleMDChange = value => {
+    setCurrentProject({
+      ...project,
+      instructions: value,
+    });
+  };
+
   const onSubmit = async e => {
     e.preventDefault();
     try {
@@ -146,7 +158,7 @@ const UpdateForm = ({ project, open, close }) => {
   return open
     ? ReactDOM.createPortal(
         <CardWrapper>
-          <span onClick={close}>
+          <span className="close" onClick={close}>
             <X size="48" />
           </span>
           <form onSubmit={onSubmit}>
@@ -160,12 +172,21 @@ const UpdateForm = ({ project, open, close }) => {
               />
             </CardField>
             <CardField>
-              <CardInput
+              {/* <CardInput
                 type="text"
                 name="instructions"
                 placeholder="Instructions"
                 value={currentProject.instructions}
                 onChange={handleChange}
+              /> */}
+              <SimpleMDE
+                label="Instructions"
+                onChange={handleMDChange}
+                value={currentProject.instructions}
+                options={{
+                  autofocus: true,
+                  spellChecker: false,
+                }}
               />
             </CardField>
             <CardField>
