@@ -74,7 +74,7 @@ const FormikLoginForm = withFormik({
       await props.handleLogin(values);
       props.history.push('/');
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
 
     // axios
@@ -86,7 +86,7 @@ const FormikLoginForm = withFormik({
     //         formikBag.props.history.push('/')
     //     })
     //     .catch(err => console.log(err.res));
-}
+  }
 })(LoginForm);
 
 export default FormikLoginForm;
