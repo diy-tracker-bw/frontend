@@ -60,7 +60,7 @@ const Header = () => {
       <Logo>
         <img src={logo} />
       </Logo>
-      <Link className="findProjects" to="/byproject">Find Projects</Link> 
+      {isAuthenticated && <Link className="findProjects" to="/byproject">Find Projects</Link> }
       {isAuthenticated && <Button onClick={handleLogout}>Log out</Button>}
     </Wrapper>
   );
