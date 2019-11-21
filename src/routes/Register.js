@@ -4,13 +4,13 @@ import RegisterForm from '../components/RegisterForm';
 import { useHistory } from 'react-router-dom';
 
 const Register = () => {
-    const { handleLogin } = useAuth();
-    const history = useHistory()
-    return (
-        <div>
-            <RegisterForm handleLogin={handleLogin} history={history} />
-        </div>
-    );
+  const { handleRegister } = useAuth();
+  const history = useHistory();
+  return (
+    <div>
+      <RegisterForm handleRegister={handleRegister} history={history} />
+    </div>
+  );
 };
 
-export default Register
+export default Register;

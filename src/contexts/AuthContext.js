@@ -75,10 +75,7 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(
         'https://patrick-diy.herokuapp.com/createnewuser',
-        {
-          username: values.username,
-          password: values.password,
-        },
+        values,
       );
       console.log(response.data);
       dispatch({
