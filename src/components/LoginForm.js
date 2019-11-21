@@ -1,10 +1,7 @@
 import React from 'react';
-import axiosWithAuth from '../utils/axiosWithAuth';
-import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
-
 
 const FormPage = styled.div`
   text-align: center;
@@ -26,7 +23,7 @@ const FormPage = styled.div`
 `;
 
 
-const LoginForm = ({ values, errors, touched }) => {
+const LoginForm = ({ errors, touched }) => {
   
   // const { handleLogin } = useAuth();
 
@@ -67,15 +64,28 @@ const FormikLoginForm = withFormik({
     username: Yup.string().required("Username Required"),
     password: Yup.string().required("Password Required")
   }),
-  handleSubmit(values, { setStatus }) {
-    // handleLogin(values)
-    axiosWithAuth()
-        .post("/user/login", values)
-        .then(res => {
-            console.log(res.data);
-            setStatus(res.data)
-        })
-        .catch(err => console.log(err.res));
+  async handleSubmit(values, { props }) {
+    // console.log(props.history)
+    // const handleRedirect = () => props.history.push('/')
+    // props.handleLogin(values)
+    // handleRedirect()
+
+    try {
+      await props.handleLogin(values);
+      props.history.push('/');
+    } catch (error) {
+      console.error(error);
+    }
+
+    // axios
+    //     .post("https://patrick-diy.herokuapp.com/user/login", values)
+    //     .then(res => {
+    //         console.log(res.data);
+    //         const token = JSON.stringify(res.data.access_token)
+    //         localStorage.setItem('token', token)
+    //         formikBag.props.history.push('/')
+    //     })
+    //     .catch(err => console.log(err.res));
 }
 })(LoginForm);
 
