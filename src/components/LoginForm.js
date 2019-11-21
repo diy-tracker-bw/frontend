@@ -1,9 +1,10 @@
-import React, { useHistory } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 
 const FormPage = styled.div`
@@ -67,17 +68,28 @@ const FormikLoginForm = withFormik({
     username: Yup.string().required("Username Required"),
     password: Yup.string().required("Password Required")
   }),
-  handleSubmit(values, props) {
+  async handleSubmit(values, { props }) {
+    // console.log(props.history)
+    // const handleRedirect = () => props.history.push('/')
     // props.handleLogin(values)
-    axios
-        .post("https://patrick-diy.herokuapp.com/user/login", values)
-        .then(res => {
-            console.log(res.data);
-            const token = JSON.stringify(res.data.access_token)
-            localStorage.getItem('token', token)
-            useHistory.push('/')
-        })
-        .catch(err => console.log(err.res));
+    // handleRedirect()
+
+    try {
+      await props.handleLogin(values);
+      props.history.push('/');
+    } catch (error) {
+      console.error(error);
+    }
+
+    // axios
+    //     .post("https://patrick-diy.herokuapp.com/user/login", values)
+    //     .then(res => {
+    //         console.log(res.data);
+    //         const token = JSON.stringify(res.data.access_token)
+    //         localStorage.setItem('token', token)
+    //         formikBag.props.history.push('/')
+    //     })
+    //     .catch(err => console.log(err.res));
 }
 })(LoginForm);
 
