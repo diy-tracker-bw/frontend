@@ -1,11 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-import { useAuth } from '../hooks/useAuth';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
-
 
 const FormPage = styled.div`
   text-align: center;
