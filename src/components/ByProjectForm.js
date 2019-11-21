@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ByUserFormCard = styled.div`
+const ByProjectFormCard = styled.div`
     display: flex;
     flex-direction: column;
     padding: 1rem;
@@ -48,9 +48,9 @@ const UserProjectItem = styled.div`
     }
 `;
 
-const ByUserForm = (props) => {
+const ByProjectForm = (props) => {
     return (
-        <ByUserFormCard>
+        <ByProjectFormCard>
             <UserContent>               
                 <UserProjectItem>
                     <h1>{props.userName}</h1>
@@ -59,8 +59,8 @@ const ByUserForm = (props) => {
                     <img src={props.image} alt="user image" />
                 </UserProjectItem>           
             </UserContent>
-        </ByUserFormCard>
+        </ByProjectFormCard>
     )
 }
 
-export default ByUserForm
+export default ByProjectForm

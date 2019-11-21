@@ -31,8 +31,6 @@ const FormPage = styled.div`
 
 
 const LoginForm = ({ errors, touched }) => {
-  
-  // const { handleLogin } = useAuth();
 
   return (
     <FormPage>
@@ -55,7 +53,7 @@ const LoginForm = ({ errors, touched }) => {
             <button className="login-button" type="submit">Login</button>
           </div>
           <Link className="nonMember" to="/register">
-            Not A Member Yet?
+            Not Yet Member?
           </Link>
         </Form>
       </div>

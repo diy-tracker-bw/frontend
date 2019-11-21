@@ -30,7 +30,6 @@ const RegistrationPage = styled.div`
 `;
 
 const RegisterForm = ({ errors, touched }) => {
-  // const { handleLogin } = useAuth();
 
   return (
     <RegistrationPage>
