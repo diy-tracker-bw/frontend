@@ -14,7 +14,7 @@ const ByUser = () => {
                 console.log(response.data)
                 const filter = response.data.filter(user =>
                     user.user.username.toLowerCase().includes(query.toLowerCase()))
-                setGetUser(response.data)
+                setGetUser(filter)
             })
             .catch(error => console.log(error));
     },[query]);
@@ -39,7 +39,11 @@ const ByUser = () => {
                 {getUser.map(user => 
                 <ByUserForm 
                     key={user.projectId} 
-                    user={user} 
+                    userName={user.user.username}
+                    image={user.photoUrl} 
+                    projectName={user.projectname}
+                    instructions={user.instructions}
+                    likes={user.likes}
                 />)}
             </div>
         </div>
