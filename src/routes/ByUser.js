@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ByUserForm from '../components/ByUserForm';
+import styled from 'styled-components';
+
+const ByUserTitle = styled.div`
+    text-align: center;
+
+    .search-bar {
+        margin: 5px;
+        
+        input {
+            border: 1px solid black;
+            padding: 1px 5px;
+        }
+    }
+`;
 
 const ByUser = () => {
 
@@ -11,7 +25,7 @@ const ByUser = () => {
         axios
             .get("https://patrick-diy.herokuapp.com/projects/projects")
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 const filter = response.data.filter(user =>
                     user.user.username.toLowerCase().includes(query.toLowerCase()))
                 setGetUser(filter)
@@ -24,9 +38,9 @@ const ByUser = () => {
     }
 
     return (
-        <div>
+        <ByUserTitle>
             <h1>Find Your Project</h1>
-            <form>
+            <form className="search-bar">
                 <input 
                     type="text"
                     onChange={handleInputChange}
@@ -46,7 +60,7 @@ const ByUser = () => {
                     likes={user.likes}
                 />)}
             </div>
-        </div>
+        </ByUserTitle>
     )
 }
 
