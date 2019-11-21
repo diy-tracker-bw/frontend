@@ -9,6 +9,7 @@ import Home from './routes/Home';
 import Login from './routes/Login';
 import Project from './routes/Project';
 import Register from './routes/Register';
+import ByUser from './routes/ByUser';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -23,6 +24,7 @@ function App() {
       <Wrapper>
         <Header />
         <Switch>
+          <Route exact path="/byuser" component={ByUser} />
           <Route exact path="/register">
             {localStorage.getItem('token') ? <Redirect to="/" /> : <Register />}
           </Route>
