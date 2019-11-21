@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ByUserForm from '../components/ByUserForm';
+import ByProjectForm from '../components/ByProjectForm';
 import styled from 'styled-components';
 
-const ByUserTitle = styled.div`
+const ByProjectTitle = styled.div`
     text-align: center;
 
     .search-bar {
@@ -16,19 +16,19 @@ const ByUserTitle = styled.div`
     }
 `;
 
-const ByUser = () => {
+const ByProject = () => {
 
-    const [getUser, setGetUser] = useState([]);
+    const [getProject, setGetProject] = useState([]);
     const [query, setQuery] = useState("");
 
     useEffect(() => {
         axios
             .get("https://patrick-diy.herokuapp.com/projects/projects")
             .then(response => {
-                // console.log(response.data)
+                console.log(response.data)
                 const filter = response.data.filter(user =>
-                    user.user.username.toLowerCase().includes(query.toLowerCase()))
-                setGetUser(filter)
+                    user.projectname.toLowerCase().includes(query.toLowerCase()))
+                setGetProject(filter)
             })
             .catch(error => console.log(error));
     },[query]);
@@ -38,20 +38,20 @@ const ByUser = () => {
     }
 
     return (
-        <ByUserTitle>
-            <h1>Find Your Project</h1>
+        <ByProjectTitle>
+            <h1>Find A Project</h1>
             <form className="search-bar">
                 <input 
                     type="text"
                     onChange={handleInputChange}
                     value={query}
-                    name="username"
-                    placeholder="Search by Username"
+                    name="projectname"
+                    placeholder="Search by Project"
                 />
             </form>
             <div>
-                {getUser.map(user => 
-                <ByUserForm 
+                {getProject.map(user => 
+                <ByProjectForm 
                     key={user.projectId} 
                     userName={user.user.username}
                     image={user.photoUrl} 
@@ -60,8 +60,8 @@ const ByUser = () => {
                     likes={user.likes}
                 />)}
             </div>
-        </ByUserTitle>
+        </ByProjectTitle>
     )
 }
 
-export default ByUser
+export default ByProject

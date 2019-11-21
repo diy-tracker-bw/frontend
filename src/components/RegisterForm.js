@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
@@ -20,11 +20,16 @@ const RegistrationPage = styled.div`
     border-radius: 12px;
     font-weight: bold;
     padding: 5px;
+    margin: 5px;
+  }
+
+  .member {
+    text-decoration: underline;
+    font-weight: bold;
   }
 `;
 
 const RegisterForm = ({ errors, touched }) => {
-  // const { handleLogin } = useAuth();
 
   return (
     <RegistrationPage>
@@ -63,6 +68,9 @@ const RegisterForm = ({ errors, touched }) => {
               Sign Up
             </button>
           </div>
+          <Link className="member" to="/login">
+              Already A Member?
+            </Link>
         </Form>
       </div>
     </RegistrationPage>

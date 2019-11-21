@@ -2,6 +2,7 @@ import React from 'react';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const FormPage = styled.div`
   text-align: center;
@@ -19,13 +20,17 @@ const FormPage = styled.div`
     border-radius: 12px;
     font-weight: bold;
     padding: 5px;
+    margin: 5px;
+  }
+
+  .nonMember {
+    text-decoration: underline;
+    font-weight: bold;
   }
 `;
 
 
 const LoginForm = ({ errors, touched }) => {
-  
-  // const { handleLogin } = useAuth();
 
   return (
     <FormPage>
@@ -47,6 +52,9 @@ const LoginForm = ({ errors, touched }) => {
           <div>
             <button className="login-button" type="submit">Login</button>
           </div>
+          <Link className="nonMember" to="/register">
+            Not Yet Member?
+          </Link>
         </Form>
       </div>
     </FormPage>
