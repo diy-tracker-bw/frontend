@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
@@ -7,6 +7,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
 
 const initialState = {
@@ -17,7 +18,9 @@ const initialState = {
 
 const AddForm = ({ setProjectFeed, open, close }) => {
   const [newProject, setNewProject] = useState(initialState);
-  const user = useAxiosWithAuth('/users/getuserinfo');
+  // const user = useAxiosWithAuth('/users/getuserinfo');
+  const { user } = useAuth();
+  const projects = useAxiosWithAuth('/projects/projects');
 
   const handleChange = e => {
     setNewProject({
@@ -36,13 +39,11 @@ const AddForm = ({ setProjectFeed, open, close }) => {
   const onSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axiosWithAuth().get('users/getuserinfo');
+      await axiosWithAuth().get('users/getuserinfo');
       await axiosWithAuth().post('/projects/project', {
         ...newProject,
         user: { ...user.data },
       });
-      console.log(res.data);
-      setProjectFeed(prev => [...prev, newProject]);
       setNewProject({
         ...newProject,
         projectname: '',
@@ -54,6 +55,10 @@ const AddForm = ({ setProjectFeed, open, close }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (projects.data) setProjectFeed(projects.data);
+  }, [newProject]);
 
   return open
     ? ReactDOM.createPortal(
