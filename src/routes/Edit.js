@@ -6,6 +6,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
 
 const initialState = {
@@ -18,7 +19,8 @@ const Edit = () => {
   const { id } = useParams();
   const history = useHistory();
   const [currentProject, setCurrentProject] = useState(initialState);
-  const user = useAxiosWithAuth('/users/getuserinfo');
+  const { user } = useAuth();
+  // const user = useAxiosWithAuth('/users/getuserinfo');
   const project = useAxiosWithAuth(`/projects/project/${id}`);
 
   const handleChange = e => {
@@ -44,7 +46,7 @@ const Edit = () => {
       });
       console.log(res.data);
       setCurrentProject({
-        ...project,
+        ...project.data,
         projectname: '',
         instructions: '',
         photoUrl: '',
