@@ -12,13 +12,12 @@ import AddProject from '../components/AddProject';
 
 const Home = () => {
   const [projectFeed, setProjectFeed] = useState([]);
-  const [currentUser, setCurrentUser] = useState({});
   const [userProjects, setUserProjects] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
   const [showAddForm, setShowAddForm] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const history = useHistory();
   const projects = useAxiosWithAuth('/projects/projects');
-  const user = useAxiosWithAuth('/users/getuserinfo');
 
   const toggleAddForm = () => setShowAddForm(!showAddForm);
 
@@ -29,7 +28,11 @@ const Home = () => {
       const newProjects = projectFeed.filter(
         project => project.projectId !== id,
       );
+      const newUserProjects = userProjects.filter(
+        project => project.projectId !== id,
+      );
       setProjectFeed(newProjects);
+      setUserProjects(newUserProjects);
     } catch (error) {
       console.log(error);
     }

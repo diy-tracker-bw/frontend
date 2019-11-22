@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
-import axiosWithAuth from '../utils/axiosWithAuth';
+
+import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
 
 const AuthContext = React.createContext();
 
@@ -48,7 +49,10 @@ const AuthProvider = ({ children }) => {
     token: localStorage.getItem('token') || null,
   };
 
+  const user = useAxiosWithAuth('/users/getuserinfo');
+
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [currentUser, setCurrentUser] = useState({});
 
   const handleLogin = async values => {
     try {
@@ -93,12 +97,18 @@ const AuthProvider = ({ children }) => {
 
   const handleLogout = () => dispatch({ type: 'LOGOUT' });
 
+  useEffect(() => {
+    setCurrentUser(user.data);
+  }, [user.data]);
+
   return (
     <AuthContext.Provider
       value={{
         token: state.token,
         isAuthenticated: state.isAuthenticated,
         registered: state.registered,
+        user,
+        currentUser,
         handleLogin,
         handleRegister,
         handleLogout,

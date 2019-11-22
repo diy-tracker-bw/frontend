@@ -1,107 +1,108 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { useHistory } from 'react-router-dom';
-import styled from 'styled-components/macro';
+import { useParams, useHistory } from 'react-router-dom';
 import { X } from 'react-feather';
-import SimpleMDE from 'react-simplemde-editor';
-import 'easymde/dist/easymde.min.css';
+import styled from 'styled-components/macro';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useAuth } from '../hooks/useAuth';
 import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
 
 const initialState = {
-  projectname: '',
-  instructions: '',
-  photoUrl: '',
+  username: '',
+  email: '',
+  photourl: '',
 };
 
-const AddForm = ({ setProjectFeed, open, close }) => {
-  const [newProject, setNewProject] = useState(initialState);
-  // const user = useAxiosWithAuth('/users/getuserinfo');
+const Profile = () => {
   const { user } = useAuth();
-  const projects = useAxiosWithAuth('/projects/projects');
+  const { id } = useParams();
+  const history = useHistory();
+  const [currentUser, setCurrentUser] = useState(initialState);
 
   const handleChange = e => {
-    setNewProject({
-      ...newProject,
+    e.persist();
+    setCurrentUser({
+      ...currentUser,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleMDChange = value => {
-    setNewProject({
-      ...newProject,
-      instructions: value,
-    });
+  const handleEdit = async () => {
+    try {
+      await axiosWithAuth().put(
+        `/users/user/${id}`,
+        JSON.stringify({
+          ...currentUser,
+        }),
+      );
+      setCurrentUser({
+        // ...currentUser,
+        ...user.data,
+        username: '',
+        email: '',
+        photourl: '',
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const onSubmit = async e => {
     e.preventDefault();
+
     try {
-      await axiosWithAuth().get('users/getuserinfo');
-      await axiosWithAuth().post('/projects/project', {
-        ...newProject,
-        user: { ...user.data },
-      });
-      setNewProject({
-        ...newProject,
-        projectname: '',
-        instructions: '',
-        photoUrl: '',
-      });
-      close();
+      await handleEdit();
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (projects.data) setProjectFeed(projects.data);
-  }, [newProject]);
+    setCurrentUser(user.data);
+  }, [id, user.data]);
 
-  return open
-    ? ReactDOM.createPortal(
-        <CardWrapper>
-          <span className="close" onClick={close}>
-            <X size="48" />
-          </span>
-          <form onSubmit={onSubmit}>
-            <CardField>
-              <CardInput
-                type="text"
-                name="projectname"
-                value={newProject.projectname}
-                placeholder="Project Name"
-                onChange={handleChange}
-              />
-            </CardField>
-            <CardField>
-              <SimpleMDE
-                label="Instructions"
-                onChange={handleMDChange}
-                value={newProject.instructions}
-                options={{
-                  autofocus: true,
-                  spellChecker: false,
-                }}
-              />
-            </CardField>
-            <CardField>
-              <CardInput
-                type="text"
-                name="photoUrl"
-                value={newProject.photoUrl}
-                placeholder="Photo"
-                onChange={handleChange}
-              />
-            </CardField>
-            <CardButton type="submit">Add Project</CardButton>
-          </form>
-        </CardWrapper>,
-        document.body,
-      )
-    : null;
+  return (
+    <CardWrapper>
+      <h1>Edit</h1>
+      <span className="close" onClick={() => history.goBack()}>
+        <X size="48" />
+      </span>
+      {user.loading ? (
+        <div>loading...</div>
+      ) : (
+        <form onSubmit={onSubmit}>
+          <CardField>
+            <CardInput
+              type="text"
+              name="projectname"
+              placeholder="Project Name"
+              value={currentUser.username}
+              onChange={handleChange}
+            />
+          </CardField>
+          <CardField>
+            <CardInput
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={currentUser.email}
+              onChange={handleChange}
+            />
+          </CardField>
+          <CardField>
+            <CardInput
+              type="text"
+              name="photourl"
+              placeholder="Photo url"
+              value={currentUser.photourl}
+              onChange={handleChange}
+            />
+          </CardField>
+          <CardButton type="submit">Save User</CardButton>
+        </form>
+      )}
+    </CardWrapper>
+  );
 };
 
 const CardWrapper = styled.div`
@@ -184,7 +185,7 @@ const CardButton = styled.button`
   font-size: 14px;
   font-weight: 700;
   color: #fff;
-  background-color: #edc7c5;
+  background-color: #e5195f;
   border: 0;
   border-radius: 35px;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.08);
@@ -196,4 +197,4 @@ const CardButton = styled.button`
   }
 `;
 
-export default AddForm;
+export default Profile;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 import { Heart, Share2, MessageSquare, MoreHorizontal } from 'react-feather';
@@ -8,14 +8,10 @@ const Project = ({ project, handleDelete }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const history = useHistory();
   return (
-    <GridItem
-      image={project.photoUrl}
-      likes={project.likes}
-      onClick={() => (toggleMenu ? setToggleMenu(false) : null)}
-    >
+    <GridItem image={project.photoUrl} likes={project.likes}>
       <UserInfo className="user-info">
         <div>
-          <img src={project.image} />
+          <img src={project.user.photourl} />
         </div>
         <h4>{project.user && project.user.username}</h4>
       </UserInfo>
@@ -27,14 +23,17 @@ const Project = ({ project, handleDelete }) => {
           <div className="left">
             <MoreHorizontal onClick={() => setToggleMenu(!toggleMenu)} />
             {toggleMenu ? (
-              <Menu>
+              <Menu onMouseLeave={() => toggleMenu && setToggleMenu(false)}>
                 <ul>
                   <li
                     onClick={() => history.push(`/edit/${project.projectId}`)}
                   >
                     Edit
                   </li>
-                  <li onClick={() => handleDelete(project.projectId)}>
+                  <li
+                    className="delete"
+                    onClick={() => handleDelete(project.projectId)}
+                  >
                     Delete
                   </li>
                 </ul>
@@ -118,7 +117,7 @@ const ProjectInfo = styled.div`
 
 const Menu = styled.div`
   position: absolute;
-  top: 100%;
+  bottom: 100%;
   background-color: #fff;
   padding: 1rem;
   border-radius: 10px;
@@ -134,6 +133,9 @@ const Menu = styled.div`
 
       &:first-child {
         border-top: none;
+      }
+      &.delete {
+        color: red;
       }
     }
   }
