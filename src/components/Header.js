@@ -1,8 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import logo from '../logo.png';
+
+const Header = () => {
+  const [toggleSubMenu, setToggleSubMenu] = useState(false);
+  const { user, currentUser, isAuthenticated, handleLogout } = useAuth();
+  const history = useHistory();
+
+  const logout = e => {
+    e.preventDefault();
+    handleLogout();
+    history.push('/login');
+  };
+  return (
+    <Wrapper>
+      <Logo>
+        <Link to="/">
+          <img src={logo} />
+        </Link>
+      </Logo>
+      {isAuthenticated && (
+        <Link className="findProjects" to="/byproject">
+          Find Projects
+        </Link>
+      )}
+      {isAuthenticated ? (
+        <>
+          {user.loading ? (
+            <div>loading...</div>
+          ) : (
+            <UserInfo className="user-info">
+              <div
+                className="userImg"
+                onClick={() => setToggleSubMenu(!toggleSubMenu)}
+              >
+                <img src={currentUser.photourl} />
+              </div>
+              {toggleSubMenu && (
+                <UserSubInfo
+                  onMouseLeave={() => toggleSubMenu && setToggleSubMenu(false)}
+                >
+                  <ul>
+                    <li>
+                      <Link to={`/profile/${currentUser.userid}`}>
+                        Edit Profile
+                      </Link>
+                    </li>
+                    <li onClick={logout}>Log out</li>
+                  </ul>
+                </UserSubInfo>
+              )}
+            </UserInfo>
+          )}
+        </>
+      ) : null}
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.header`
   display: flex;
@@ -53,30 +109,66 @@ const Button = styled.button`
   }
 `;
 
-const Header = () => {
-  const { isAuthenticated, handleLogout } = useAuth();
-  const history = useHistory();
+const UserInfo = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 120px;
 
-  const logout = e => {
-    e.preventDefault();
-    handleLogout();
-    history.push('/login');
-  };
-  return (
-    <Wrapper>
-      <Logo>
-        <Link to="/">
-          <img src={logo} />
-        </Link>
-      </Logo>
-      {isAuthenticated && (
-        <Link className="findProjects" to="/byproject">
-          Find Projects
-        </Link>
-      )}
-      {isAuthenticated && <Button onClick={logout}>Log out</Button>}
-    </Wrapper>
-  );
-};
+  div.userImg {
+    background-color: #fff;
+    width: 65px;
+    height: 65px;
+    border-radius: 50px;
+    img {
+      width: 65px;
+      height: 65px;
+      border-radius: 50px;
+      object-fit: cover;
+    }
+  }
+`;
+
+const UserSubInfo = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #fff;
+  margin-top: 1rem;
+  padding: 1rem;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.05), 0 0px 1px rgba(0, 0, 0, 0.08);
+
+  ul {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: #111;
+      padding: 0.5rem 0;
+      list-style: none;
+      border-top: 1px solid #cacaca;
+
+      &:first-child {
+        border-top: none;
+      }
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+`;
 
 export default Header;
