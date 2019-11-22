@@ -1,12 +1,101 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { CSSTransition } from 'react-transition-group';
 import { PlusCircle, Plus, Minus } from 'react-feather';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useAuth } from '../hooks/useAuth';
+import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
 
-import ProjectsFeed from '../components/ProjectsFeed';
-import AddForm from '../components/AddForm';
+import Feed from '../components/Feed';
+import AddProject from '../components/AddProject';
+
+const Home = () => {
+  const [projectFeed, setProjectFeed] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
+  const [userProjects, setUserProjects] = useState([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const history = useHistory();
+  const projects = useAxiosWithAuth('/projects/projects');
+  const user = useAxiosWithAuth('/users/getuserinfo');
+
+  const toggleAddForm = () => setShowAddForm(!showAddForm);
+
+  const handleDelete = async id => {
+    try {
+      console.log(id);
+      const res = await axiosWithAuth().delete(`/projects/project/${id}`);
+      const newProjects = projectFeed.filter(
+        project => project.projectId !== id,
+      );
+      setProjectFeed(newProjects);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentUser(user.data);
+    if (user.data) setUserProjects(user.data.projects);
+    setProjectFeed(projects.data);
+  }, [projects.data, user.data]);
+
+  return (
+    <Wrapper>
+      <CSSTransition in={showAddForm} timeout={300} classNames="show-form">
+        <AddProject
+          setProjectFeed={setProjectFeed}
+          setUserProjects={setUserProjects}
+          open={showAddForm}
+          close={toggleAddForm}
+        />
+      </CSSTransition>
+      {isAuthenticated ? (
+        <>
+          {user.loading ? (
+            <div>loading...</div>
+          ) : (
+            <>
+              <UserSection>
+                <h2>
+                  hello <span>@{currentUser.username}</span>
+                </h2>
+                <UserContent>
+                  <UserAddUtil>
+                    <div className="add-project" onClick={toggleAddForm}>
+                      <PlusCircle size="48" />
+                      <h3>Add New</h3>
+                    </div>
+                  </UserAddUtil>
+                  <UserProjects>
+                    {userProjects.map(userProject => (
+                      <UserProjectItem
+                        onClick={() =>
+                          history.push(`/edit/${userProject.projectId}`)
+                        }
+                        key={userProject.projectId}
+                        image={userProject.photoUrl}
+                      >
+                        <h2>{userProject.projectname}</h2>
+                      </UserProjectItem>
+                    ))}
+                  </UserProjects>
+                </UserContent>
+              </UserSection>
+            </>
+          )}
+        </>
+      ) : null}
+      <h2 className="discover">Discover</h2>
+      {projects.loading ? (
+        <div>loading...</div>
+      ) : (
+        <Feed projects={projectFeed} handleDelete={handleDelete} />
+      )}
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   padding: 2rem;
@@ -96,80 +185,5 @@ const UserProjectItem = styled.div`
     font-size: 2rem;
   }
 `;
-
-const Home = () => {
-  const [projects, setProjects] = useState([]);
-  const [currentUser, setCurrentUser] = useState({});
-  const [userProjects, setUserProjects] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
-  const { isAuthenticated } = useAuth();
-
-  const toggleAddForm = () => setShowAddForm(!showAddForm);
-
-  useEffect(() => {
-    (async () => {
-      const userRes = await axiosWithAuth().get('users/getuserinfo');
-      const user = await userRes.data;
-      setCurrentUser(user);
-      setUserProjects(user.projects);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const res = await axiosWithAuth().get('/projects/projects');
-      const data = await res.data;
-      setProjects(data);
-    })();
-  }, [projects]);
-  return (
-    <Wrapper>
-      <CSSTransition in={showAddForm} timeout={300} classNames="show-form">
-        <AddForm
-          projects={projects}
-          setProjects={setProjects}
-          open={showAddForm}
-          close={toggleAddForm}
-        />
-      </CSSTransition>
-      {isAuthenticated ? (
-        <>
-          <UserSection>
-            <h2>
-              hello <span>@{currentUser.username}</span>
-            </h2>
-            <UserContent>
-              <UserAddUtil>
-                <div className="add-project" onClick={toggleAddForm}>
-                  <PlusCircle size="48" />
-                  <h3>Add New</h3>
-                </div>
-              </UserAddUtil>
-              <UserProjects>
-                {userProjects.map(userProject => (
-                  <UserProjectItem
-                    onClick={() => setShowEditForm(!showEditForm)}
-                    key={userProject.projectId}
-                    image={userProject.photoUrl}
-                  >
-                    <h2>{userProject.projectname}</h2>
-                  </UserProjectItem>
-                ))}
-              </UserProjects>
-            </UserContent>
-          </UserSection>
-        </>
-      ) : null}
-      <h2 className="discover">Discover</h2>
-      <ProjectsFeed
-        showEditForm={showEditForm}
-        setShowEditForm={setShowEditForm}
-        projects={projects}
-        setProjects={setProjects}
-      />
-    </Wrapper>
-  );
-};
 
 export default Home;
