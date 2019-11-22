@@ -1,33 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import styled from 'styled-components/macro';
+import React, { useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { X } from 'react-feather';
+import styled from 'styled-components/macro';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
+import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
 
-const UpdateForm = ({ project, open, close }) => {
-  const [currentProject, setCurrentProject] = useState({
-    projectname: '',
-    instructions: '',
-    photoUrl: '',
-  });
+const initialState = {
+  projectname: '',
+  instructions: '',
+  photoUrl: '',
+};
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axiosWithAuth().get(
-          `/projects/project/${project.projectId}`,
-        );
-        setCurrentProject(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [project.projectId]);
+const Edit = () => {
+  const { id } = useParams();
+  const history = useHistory();
+  const [currentProject, setCurrentProject] = useState(initialState);
+  const user = useAxiosWithAuth('/users/getuserinfo');
+  const project = useAxiosWithAuth(`/projects/project/${id}`);
 
   const handleChange = e => {
+    e.persist();
     setCurrentProject({
       ...currentProject,
       [e.target.name]: e.target.value,
@@ -36,22 +31,17 @@ const UpdateForm = ({ project, open, close }) => {
 
   const handleMDChange = value => {
     setCurrentProject({
-      ...project,
+      ...currentProject,
       instructions: value,
     });
   };
 
-  const onSubmit = async e => {
-    e.preventDefault();
+  const handleEdit = async () => {
     try {
-      const userRes = await axiosWithAuth().get('users/getuserinfo');
-      const res = await axiosWithAuth().put(
-        `/projects/project/${project.projectId}`,
-        {
-          ...currentProject,
-          user: { ...userRes.data },
-        },
-      );
+      const res = await axiosWithAuth().put(`/projects/project/${id}`, {
+        ...currentProject,
+        user: { ...user.data },
+      });
       console.log(res.data);
       setCurrentProject({
         ...project,
@@ -63,56 +53,65 @@ const UpdateForm = ({ project, open, close }) => {
       console.log(error);
     }
   };
-  return open
-    ? ReactDOM.createPortal(
-        <CardWrapper>
-          <span className="close" onClick={close}>
-            <X size="48" />
-          </span>
-          <form onSubmit={onSubmit}>
-            <CardField>
-              <CardInput
-                type="text"
-                name="projectname"
-                placeholder="Project Name"
-                value={currentProject.projectname}
-                onChange={handleChange}
-              />
-            </CardField>
-            <CardField>
-              {/* <CardInput
-                type="text"
-                name="instructions"
-                placeholder="Instructions"
-                value={currentProject.instructions}
-                onChange={handleChange}
-              /> */}
-              <SimpleMDE
-                label="Instructions"
-                onChange={handleMDChange}
-                value={currentProject.instructions}
-                options={{
-                  autofocus: true,
-                  spellChecker: false,
-                }}
-              />
-            </CardField>
-            <CardField>
-              <CardInput
-                type="text"
-                name="photoUrl"
-                placeholder="Photo url"
-                value={currentProject.photoUrl}
-                onChange={handleChange}
-              />
-            </CardField>
-            <CardButton type="submit">Save Project</CardButton>
-            <CardButton onClick={close}>Cancel</CardButton>
-          </form>
-        </CardWrapper>,
-        document.body,
-      )
-    : null;
+
+  const onSubmit = async e => {
+    e.preventDefault();
+
+    try {
+      await handleEdit();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentProject(project.data);
+  }, [id, project.data]);
+
+  return (
+    <CardWrapper>
+      <h1>Edit</h1>
+      <span className="close" onClick={() => history.goBack()}>
+        <X size="48" />
+      </span>
+      {project.loading ? (
+        <div>loading...</div>
+      ) : (
+        <form onSubmit={onSubmit}>
+          <CardField>
+            <CardInput
+              type="text"
+              name="projectname"
+              placeholder="Project Name"
+              value={currentProject.projectname}
+              onChange={handleChange}
+            />
+          </CardField>
+          <CardField>
+            <SimpleMDE
+              label="Instructions"
+              onChange={handleMDChange}
+              value={currentProject.instructions}
+              options={{
+                autofocus: true,
+                spellChecker: false,
+              }}
+            />
+          </CardField>
+          <CardField>
+            <CardInput
+              type="text"
+              name="photoUrl"
+              placeholder="Photo url"
+              value={currentProject.photoUrl}
+              onChange={handleChange}
+            />
+          </CardField>
+          <CardButton type="submit">Save Project</CardButton>
+        </form>
+      )}
+    </CardWrapper>
+  );
 };
 
 const CardWrapper = styled.div`
@@ -207,4 +206,4 @@ const CardButton = styled.button`
   }
 `;
 
-export default UpdateForm;
+export default Edit;
