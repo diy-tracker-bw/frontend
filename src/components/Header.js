@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { PlusCircle, Plus, Minus } from 'react-feather';
+import { useHistory } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import logo from '../logo.png';
@@ -56,6 +56,13 @@ const Button = styled.button`
 
 const Header = () => {
   const { isAuthenticated, handleLogout } = useAuth();
+  const history = useHistory();
+
+  const logout = e => {
+    e.preventDefault();
+    handleLogout();
+    history.push('/login');
+  };
   return (
     <Wrapper>
       <Logo>
@@ -66,7 +73,7 @@ const Header = () => {
           Find Projects
         </Link>
       )}
-      {isAuthenticated && <Button onClick={handleLogout}>Log out</Button>}
+      {isAuthenticated && <Button onClick={logout}>Log out</Button>}
     </Wrapper>
   );
 };
