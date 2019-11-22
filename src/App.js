@@ -6,6 +6,7 @@ import GlobalStyles from './styles/GlobalStyles';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import Home from './routes/Home';
+import Edit from './routes/Edit';
 import Login from './routes/Login';
 import Project from './routes/Project';
 import Register from './routes/Register';
@@ -36,6 +37,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute path="/project/:id">
             <Project />
+          </PrivateRoute>
+          <PrivateRoute path="/edit/:id">
+            <Edit />
           </PrivateRoute>
         </Switch>
       </Wrapper>
