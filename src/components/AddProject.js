@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { X } from 'react-feather';
 import SimpleMDE from 'react-simplemde-editor';
@@ -9,6 +8,7 @@ import 'easymde/dist/easymde.min.css';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useAuth } from '../hooks/useAuth';
 import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
+import { useImageUploader } from '../hooks/useImageUploader';
 
 const initialState = {
   projectname: '',
@@ -18,9 +18,16 @@ const initialState = {
 
 const AddForm = ({ setProjectFeed, open, close }) => {
   const [newProject, setNewProject] = useState(initialState);
-  // const user = useAxiosWithAuth('/users/getuserinfo');
   const { user } = useAuth();
   const projects = useAxiosWithAuth('/projects/projects');
+
+  const {
+    imageUrl,
+    files,
+    setFiles,
+    getRootProps,
+    getInputProps,
+  } = useImageUploader();
 
   const handleChange = e => {
     setNewProject({
@@ -39,6 +46,10 @@ const AddForm = ({ setProjectFeed, open, close }) => {
   const onSubmit = async e => {
     e.preventDefault();
     try {
+      setNewProject({
+        ...newProject,
+        photoUrl: imageUrl,
+      });
       await axiosWithAuth().get('users/getuserinfo');
       await axiosWithAuth().post('/projects/project', {
         ...newProject,
@@ -56,7 +67,16 @@ const AddForm = ({ setProjectFeed, open, close }) => {
     }
   };
 
+  const thumbs = files.map(file => (
+    <div style={thumb} key={file.name}>
+      <div style={thumbInner}>
+        <img src={file.preview} style={img} alt="" />
+      </div>
+    </div>
+  ));
+
   useEffect(() => {
+    console.log(imageUrl);
     if (projects.data) setProjectFeed(projects.data);
   }, [newProject]);
 
@@ -88,13 +108,20 @@ const AddForm = ({ setProjectFeed, open, close }) => {
               />
             </CardField>
             <CardField>
-              <CardInput
+              <section className="container">
+                <div {...getRootProps({ className: 'dropzone' })}>
+                  <input {...getInputProps()} />
+                  <p>Drag 'n' drop some files here, or click to select files</p>
+                </div>
+                <aside style={thumbsContainer}>{thumbs}</aside>
+              </section>
+              {/* <CardInput
                 type="text"
                 name="photoUrl"
                 value={newProject.photoUrl}
                 placeholder="Photo"
                 onChange={handleChange}
-              />
+              /> */}
             </CardField>
             <CardButton type="submit">Add Project</CardButton>
           </form>
@@ -195,5 +222,36 @@ const CardButton = styled.button`
     transform: translate(0, -5px);
   }
 `;
+
+const thumbsContainer = {
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  marginTop: 16,
+};
+
+const thumb = {
+  display: 'inline-flex',
+  borderRadius: 2,
+  border: '1px solid #eaeaea',
+  marginBottom: 8,
+  marginRight: 8,
+  width: 100,
+  height: 100,
+  padding: 4,
+  boxSizing: 'border-box',
+};
+
+const thumbInner = {
+  display: 'flex',
+  minWidth: 0,
+  overflow: 'hidden',
+};
+
+const img = {
+  display: 'block',
+  width: 'auto',
+  height: '100%',
+};
 
 export default AddForm;
