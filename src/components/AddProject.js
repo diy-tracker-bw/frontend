@@ -1,11 +1,103 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { X } from 'react-feather';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
+import { useAxiosWithAuth } from '../hooks/useAxiosWithAuth';
+
+const initialState = {
+  projectname: '',
+  instructions: '',
+  photoUrl: '',
+};
+
+const AddForm = ({ setProjectFeed, open, close }) => {
+  const [newProject, setNewProject] = useState(initialState);
+  const user = useAxiosWithAuth('/users/getuserinfo');
+
+  const handleChange = e => {
+    setNewProject({
+      ...newProject,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleMDChange = value => {
+    setNewProject({
+      ...newProject,
+      instructions: value,
+    });
+  };
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    try {
+      const res = await axiosWithAuth().get('users/getuserinfo');
+      await axiosWithAuth().post('/projects/project', {
+        ...newProject,
+        user: { ...user.data },
+      });
+      console.log(res.data);
+      setProjectFeed(prev => [...prev, newProject]);
+      setNewProject({
+        ...newProject,
+        projectname: '',
+        instructions: '',
+        photoUrl: '',
+      });
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return open
+    ? ReactDOM.createPortal(
+        <CardWrapper>
+          <span className="close" onClick={close}>
+            <X size="48" />
+          </span>
+          <form onSubmit={onSubmit}>
+            <CardField>
+              <CardInput
+                type="text"
+                name="projectname"
+                value={newProject.projectname}
+                placeholder="Project Name"
+                onChange={handleChange}
+              />
+            </CardField>
+            <CardField>
+              <SimpleMDE
+                label="Instructions"
+                onChange={handleMDChange}
+                value={newProject.instructions}
+                options={{
+                  autofocus: true,
+                  spellChecker: false,
+                }}
+              />
+            </CardField>
+            <CardField>
+              <CardInput
+                type="text"
+                name="photoUrl"
+                value={newProject.photoUrl}
+                placeholder="Photo"
+                onChange={handleChange}
+              />
+            </CardField>
+            <CardButton type="submit">Add Project</CardButton>
+          </form>
+        </CardWrapper>,
+        document.body,
+      )
+    : null;
+};
 
 const CardWrapper = styled.div`
   position: absolute;
@@ -98,97 +190,5 @@ const CardButton = styled.button`
     transform: translate(0, -5px);
   }
 `;
-
-const AddForm = ({ projects, setProjects, open, close }) => {
-  const [project, setProject] = useState({
-    projectname: '',
-    instructions: '',
-    photoUrl: '',
-  });
-
-  const handleChange = e => {
-    setProject({
-      ...project,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleMDChange = value => {
-    setProject({
-      ...project,
-      instructions: value,
-    });
-  };
-
-  const onSubmit = async e => {
-    e.preventDefault();
-    try {
-      const userRes = await axiosWithAuth().get('users/getuserinfo');
-      await axiosWithAuth().post('/projects/project', {
-        ...project,
-        user: { ...userRes.data },
-      });
-      setProject({
-        ...project,
-        projectname: '',
-        instructions: '',
-        photoUrl: '',
-      });
-      close();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  return open
-    ? ReactDOM.createPortal(
-        <CardWrapper>
-          <span className="close" onClick={close}>
-            <X size="48" />
-          </span>
-          <form onSubmit={onSubmit}>
-            <CardField>
-              <CardInput
-                type="text"
-                name="projectname"
-                value={project.projectname}
-                placeholder="Project Name"
-                onChange={handleChange}
-              />
-            </CardField>
-            <CardField>
-              {/* <CardInput
-                type="text"
-                name="instructions"
-                value={project.instructions}
-                placeholder="Instructions"
-                onChange={handleChange}
-              /> */}
-              <SimpleMDE
-                label="Instructions"
-                onChange={handleMDChange}
-                value={project.instructions}
-                options={{
-                  autofocus: true,
-                  spellChecker: false,
-                }}
-              />
-            </CardField>
-            <CardField>
-              <CardInput
-                type="text"
-                name="photoUrl"
-                value={project.photoUrl}
-                placeholder="Photo"
-                onChange={handleChange}
-              />
-            </CardField>
-            <CardButton type="submit">Add Project</CardButton>
-          </form>
-        </CardWrapper>,
-        document.body,
-      )
-    : null;
-};
 
 export default AddForm;
