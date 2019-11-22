@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
 import logo from '../logo.png';
 
 const Wrapper = styled.header`
@@ -66,7 +65,9 @@ const Header = () => {
   return (
     <Wrapper>
       <Logo>
-        <img src={logo} />
+        <Link to="/">
+          <img src={logo} />
+        </Link>
       </Logo>
       {isAuthenticated && (
         <Link className="findProjects" to="/byproject">
