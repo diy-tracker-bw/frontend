@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
-import axiosWithAuth from '../utils/axiosWithAuth';
 
 const AuthContext = React.createContext();
 
@@ -91,7 +90,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleLogout = () => dispatch({ type: 'LOGOUT' });
+  const handleLogout = history => dispatch({ type: 'LOGOUT' });
 
   return (
     <AuthContext.Provider
