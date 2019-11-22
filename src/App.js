@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import Home from './routes/Home';
 import Edit from './routes/Edit';
+import Profile from './routes/Profile';
 import Login from './routes/Login';
 import Project from './routes/Project';
 import Register from './routes/Register';
@@ -40,6 +41,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute path="/edit/:id">
             <Edit />
+          </PrivateRoute>
+          <PrivateRoute path="/profile/:id">
+            <Profile />
           </PrivateRoute>
         </Switch>
       </Wrapper>
